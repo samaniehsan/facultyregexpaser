@@ -16,31 +16,77 @@ else:
     outputFileName = inputfileName + "-parsed.txt"; 
 
 
-def get_value(expression, content) :
+def read_name(content) :
     cleanContent = re.sub("\r\n|\n", r" ", content)
     cleanContent = re.sub(' +',' ', cleanContent)
-    rexp= re.compile(expression, re.DOTALL)
+    rexp= re.compile(r"(?<=\<li\sclass=\"current\"\>)(.*?)(?=\</li\>)", re.DOTALL)
     found= rexp.search(cleanContent)
-    print("name:") 
-    print(found)
     if found :
         return found.group(0).strip()
     return ""
 
-def read_name(content) :
-    return get_value(r"(?<=\<li\sclass=\"current\"\>)(.*?)(?=\</li\>)", content)
-
 def read_email(content) :
-    return get_value(r"(?<=\<li class=\"current\"\>)(.*?)(?=\</li\>)", content)
+    cleanContent = re.sub("\r\n|\n", r" ", content)
+    cleanContent = re.sub(' +',' ', cleanContent)
+    username = ""
+    domain = ""
+    rexp= re.compile(r"(?<=email_image/\?user=)(.*?)(?=&)", re.DOTALL)
+    usernameGroup= rexp.search(cleanContent)
+    
+    if usernameGroup :
+        username = usernameGroup.group(0)
+
+    rexp2= re.compile(r"(?<=domain=)(.*?)(?=&)", re.DOTALL)
+    domainGroup= rexp2.search(cleanContent)
+
+    if domainGroup :
+        domain = domainGroup.group(0)
+
+    return username + "@" + domain
 
 def read_research(content) :
-    return get_value(r"(?<=Research Interests\s\</h3\>\s\</div\>\s\<div\sclass=\"panel-body\"\>\s\<p\>)(.*?)(?=\</p\>\</div\>)", content)
+    cleanContent = re.sub("\r\n|\n", r" ", content)
+    cleanContent = re.sub(' +',' ', cleanContent)
+    rexp= re.compile(r"(?<=Research Interests)(.*?)(?=\</p\>)", re.DOTALL)
+    found= rexp.search(cleanContent)
+    if found :
+        uncleanContent = found.group(0)
+        rexp2= re.compile(r"(?<=\<p\>)(.*)", re.DOTALL)
+        found2= rexp2.search(uncleanContent)
+        if found2 :
+            return found2.group(0)
+    return ""
 
 def read_education(content) :
-    return get_value(r"(?<=Education\</h3\>\s</div\>\s\<div\sclass=\"panel-body\"\>\<p\>)(.*?)(?=\</p\>\</div\>)", content)
+    cleanContent = re.sub("\r\n|\n", r" ", content)
+    cleanContent = re.sub(' +',' ', cleanContent)
+    rexp= re.compile(r"(?<=Education)(.*?)(?=\</p\>)", re.DOTALL)
+    found= rexp.search(cleanContent)
+    if found :
+        uncleanContent = found.group(0)
+        rexp2= re.compile(r"(?<=\<p\>)(.*)", re.DOTALL)
+        found2= rexp2.search(uncleanContent)
+        if found2 :
+            return found2.group(0)
+    return ""
 
-def read_webpage(content) : 
-    return get_value(r"(?<=\<a)(.*?)(?=\>Homepage\</a\>)", content)
+def read_webpage(content) :
+    cleanContent = re.sub("\r\n|\n", r" ", content)
+    cleanContent = re.sub(' +',' ', cleanContent)
+    rexp= re.compile(r"(?<=\<small>)(.*?).(?=Homepage)", re.DOTALL)
+    found= rexp.search(cleanContent)
+    if found :
+        uncleanContent = found.group(0)
+        print("webpage:" + uncleanContent)
+        rexp2= re.compile(r"(?<=href)(.*?)(?=\>)", re.DOTALL)
+        found2= rexp2.search(uncleanContent)
+        if found2 :
+            uncleanContent3= found2.group(0)
+            rexp3= re.compile(r"(?<=\")(.*?)(?=\")", re.DOTALL)
+            found3= rexp3.search(uncleanContent3)
+            if found3:
+                return found3.group(0)
+    return ""
 
 def read_values() :
     #first read our input file
