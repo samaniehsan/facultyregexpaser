@@ -77,7 +77,6 @@ def read_webpage(content) :
     found= rexp.search(cleanContent)
     if found :
         uncleanContent = found.group(0)
-        print("webpage:" + uncleanContent)
         rexp2= re.compile(r"(?<=href)(.*?)(?=\>)", re.DOTALL)
         found2= rexp2.search(uncleanContent)
         if found2 :
