@@ -34,14 +34,13 @@ def read_email(content) :
     return get_value(r"(?<=\<li class=\"current\"\>)(.*?)(?=\</li\>)", content)
 
 def read_research(content) :
-    return get_value(r"(?<=Research Interests\</h3\>\s\</div\>\s\<div\sclass=\"panel-body\"\>\<p\>)(.*?)(?=\</p\>\</div\>)", content)
+    return get_value(r"(?<=Research Interests\s\</h3\>\s\</div\>\s\<div\sclass=\"panel-body\"\>\s\<p\>)(.*?)(?=\</p\>\</div\>)", content)
 
 def read_education(content) :
     return get_value(r"(?<=Education\</h3\>\s</div\>\s\<div\sclass=\"panel-body\"\>\<p\>)(.*?)(?=\</p\>\</div\>)", content)
 
 def read_webpage(content) : 
-    #return get_value(r"(?<=\<li class=\"current\"\>)(.*?)(?=\</li\>)", content)
-    return "x4"
+    return get_value(r"(?<=\<a)(.*?)(?=\>Homepage\</a\>)", content)
 
 def read_values() :
     #first read our input file
