@@ -16,10 +16,10 @@ else:
     outputFileName = inputfileName + "-parsed.txt"; 
 
 
-def read_name(content) :
+def get_value(expression, content) :
     cleanContent = re.sub("\r\n|\n", r" ", content)
     cleanContent = re.sub(' +',' ', cleanContent)
-    rexp= re.compile(r"(?<=\<li class=\"current\"\>)(.*?)(?=\</li\>)", re.DOTALL);
+    rexp= re.compile(expression, re.DOTALL)
     found= rexp.search(cleanContent)
     print("name:") 
     print(found)
@@ -27,17 +27,21 @@ def read_name(content) :
         return found.group(0).strip()
     return ""
 
+def read_name(content) :
+    return get_value(r"(?<=\<li\sclass=\"current\"\>)(.*?)(?=\</li\>)", content)
+
 def read_email(content) :
-    return "x2" 
+    return get_value(r"(?<=\<li class=\"current\"\>)(.*?)(?=\</li\>)", content)
 
 def read_research(content) :
-    return "x3" 
+    return get_value(r"(?<=Research Interests\</h3\>\s\</div\>\s\<div\sclass=\"panel-body\"\>\<p\>)(.*?)(?=\</p\>\</div\>)", content)
 
 def read_education(content) :
-    return "x4"
+    return get_value(r"(?<=Education\</h3\>\s</div\>\s\<div\sclass=\"panel-body\"\>\<p\>)(.*?)(?=\</p\>\</div\>)", content)
 
 def read_webpage(content) : 
-    return "x5"
+    #return get_value(r"(?<=\<li class=\"current\"\>)(.*?)(?=\</li\>)", content)
+    return "x4"
 
 def read_values() :
     #first read our input file
@@ -45,7 +49,7 @@ def read_values() :
     inputContent= inputFile.read()
     
     if len(inputContent) > 0:
-        return read_name(inputContent), read_email(inputContent), read_research(inputContent), read_education(inputContent), read_webpage(inputContent)
+        return read_name(inputContent), read_education(inputContent), read_research(inputContent), read_email(inputContent), read_webpage(inputContent)
 
     return "", "", "", "", ""
 
